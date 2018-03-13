@@ -1,0 +1,48 @@
+sudo: false
+
+node_js: ["8.2.1"]
+bash: ["4.4"]
+python: ["3.4"]
+go: ["1.8"]
+
+env:
+  global:
+    - CODECOV_TOKEN=0b81b088-9e91-4ae1-bb78-51b09c7a3b22
+
+services:
+  - docker
+
+cache:
+  apt: true
+  bundler: true
+  pip: true
+  yarn: true
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/docker
+    - $GEM_HOME
+
+addons:
+  apt:
+    packages:
+      - shellcheck
+      - python-dev
+
+before_install:
+  - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/before_install.sh)
+  - mkdir -p ${HOME}/.ssh && openssl aes-256-cbc -K $encrypted_ff41493d3b6d_key -iv $encrypted_ff41493d3b6d_iv -in build/deploy_key.enc -out ${HOME}/.ssh/id_rsa -d && chmod 400 ${HOME}/.ssh/id_rsa
+
+install:
+  - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/install.sh)
+
+script:
+  - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/script.sh)
+
+after_success:
+  - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/after_success.sh)
+
+branches:
+  except:
+    - /^REL\d+/
+    - /^BRANCH-.*$/
+
