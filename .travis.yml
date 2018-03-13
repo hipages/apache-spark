@@ -20,7 +20,7 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $HOME/docker
-    - $HOME/apache
+    - $HOME/spark
     - $GEM_HOME
 
 addons:
@@ -34,14 +34,12 @@ before_install:
   - mkdir -p ${HOME}/.ssh && openssl aes-256-cbc -K $encrypted_ff41493d3b6d_key -iv $encrypted_ff41493d3b6d_iv -in build/deploy_key.enc -out ${HOME}/.ssh/id_rsa -d && chmod 400 ${HOME}/.ssh/id_rsa
 
 install:
-  - ls ${HOME}/
-  - ls ${HOME}/apache/
-  - cd ${HOME}/apache && echo ${PWD} && git clone https://github.com/apache/spark . && git checkout v2.3.0
+  - cd ${HOME}/spark && git clone https://github.com/apache/spark . && git checkout v2.3.0
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/install.sh)
 
 script:
   - cd ${HOME}
-  - docker run -it -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /opt/spark/build/mvn -Pkubernetes -DskipTests clean package
+  - docker run -it -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark/build && mvn -Pkubernetes -DskipTests clean package"
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/script.sh)
 
 after_success:
