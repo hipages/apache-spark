@@ -41,7 +41,7 @@ install:
 
 script:
   - cd ${HOME}/spark
-  - docker run --name spark -it -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -DskipTests -X clean package"
+  - docker run --name spark -it -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -DskipTests -q clean package"
   - docker ps -a
   - echo ${PWD}
   - bash -x bin/docker-image-tools.sh build -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG}
