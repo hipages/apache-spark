@@ -47,8 +47,8 @@ script:
   - docker logs --tail 10 spark
   # login to ECR, doing it here since we are not using captain
   - eval "$(aws ecr get-login --no-include-email --region "ap-southeast-2")"
-  - ${HOME}/spark/bin/docker-image-tool.sh build -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG}
-  - ${HOME}/spark/bin/docker-image-tool.sh push -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG}
+  - ${HOME}/spark/bin/docker-image-tool.sh -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG} build
+  - ${HOME}/spark/bin/docker-image-tool.sh -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG} push
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/script.sh)
 
 after_success:
