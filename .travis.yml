@@ -45,11 +45,11 @@ script:
   - docker run --name spark -d -v ${HOME}/.m2:/root/.m2 -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -DskipTests clean package"
   - sleep 15; while [ $(docker inspect spark --format='{{.State.Status}}') == "running" ]; do docker logs --tail 10 spark; sleep 30; done
   - docker logs --tail 10 spark
+  - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/script.sh)
   # login to ECR, doing it here since we are not using captain
   - eval "$(aws ecr get-login --no-include-email --region "ap-southeast-2")"
   - ${HOME}/spark/bin/docker-image-tool.sh -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG} build
   - ${HOME}/spark/bin/docker-image-tool.sh -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG} push
-  - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/script.sh)
 
 after_success:
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/after_success.sh)
