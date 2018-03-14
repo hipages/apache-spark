@@ -41,7 +41,7 @@ install:
 
 script:
   - cd ${HOME}/spark
-  - docker run --name spark -d -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -DskipTests -q clean package"
+  - docker run --name spark -d -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -DskipTests clean package"
   - while [ $(docker inspect spark --format='{{.State.Status}}') == "running" ]; do docker logs spark; sleep 30; done
   - bash -x bin/docker-image-tools.sh build -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG}
   - bash -x bin/docker-image-tools.sh push -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages/apache-spark -t ${TOOLS_TAG}
