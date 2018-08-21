@@ -37,12 +37,12 @@ before_install:
 install:
   - cd ${HOME}/spark
   - test -d .git && git checkout master; git pull || git clone https://github.com/apache/spark .
-  - git checkout v2.3.0
+# - git checkout v2.3.0
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/install.sh)
 
 script:
   - cd ${HOME}/spark
-  - docker run --name spark -d -v ${HOME}/.m2:/root/.m2 -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -DskipTests clean package"
+  - docker run --name spark -d -v ${HOME}/.m2:/root/.m2 -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -Phadoop2.7  -DskipTests clean package"
   - sleep 15; while [ $(docker inspect spark --format='{{.State.Status}}') == "running" ]; do docker logs --tail 10 spark; sleep 30; done
   - docker logs --tail 10 spark
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/script.sh)
