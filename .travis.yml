@@ -54,8 +54,8 @@ script:
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/script.sh)
   # login to ECR, doing it here since we are not using captain
   - eval "$(aws ecr get-login --no-include-email --region "ap-southeast-2")"
-  - ${HOME}/spark/bin/docker-image-tool.sh -f -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages -t ${TOOLS_TAG} build
-  - ${HOME}/spark/bin/docker-image-tool.sh -f -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages -t ${TOOLS_TAG} push
+  - ${HOME}/spark/bin/docker-image-tool.sh -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages -t ${TOOLS_TAG} build
+  - ${HOME}/spark/bin/docker-image-tool.sh -r 855460960717.dkr.ecr.ap-southeast-2.amazonaws.com/hipages -t ${TOOLS_TAG} push
 
 after_success:
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/after_success.sh)
