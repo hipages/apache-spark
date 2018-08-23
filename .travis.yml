@@ -41,11 +41,9 @@ install:
   - source <(curl -sSL https://raw.githubusercontent.com/hipages/travis-tools/master/docker/install.sh)
 
 script:
-  - mkdir -p ${HOME}/spark/assembly/target/scala-2.11/jars/
   - cd ${HOME}/spark/assembly/target/scala-2.11/jars/
-  - ls -als
-  - curl -s -L -O "https://raw.github.com/banzaicloud/spark-metrics/master/maven-repo/releases?filepath=io/dropwizard/metrics/metrics-core/3.1.2/io.dropwizard.metrics:metrics-core:3.1.2.jar"
-  - for file in "simpleclient/0.3.0/io.prometheus_simpleclient-0.3.0.jar simpleclient_common/0.3.0/io.prometheus_simpleclient_common-0.3.0.jar simpleclient_dropwizard/0.3.0/io.prometheus_simpleclient_dropwizard-0.3.0.jar simpleclient_pushgateway/0.3.0/io.prometheus_simpleclient_pushgateway-0.3.0.jar"; do curl -s -L -O "https://raw.github.com/banzaicloud/spark-metrics/master/maven-repo/releases?filepath=io/prometheus/${file}"; done
+  - sudo curl -s -L -O "https://raw.github.com/banzaicloud/spark-metrics/master/maven-repo/releases?filepath=io/dropwizard/metrics/metrics-core/3.1.2/io.dropwizard.metrics:metrics-core:3.1.2.jar"
+  - for file in "simpleclient/0.3.0/io.prometheus_simpleclient-0.3.0.jar simpleclient_common/0.3.0/io.prometheus_simpleclient_common-0.3.0.jar simpleclient_dropwizard/0.3.0/io.prometheus_simpleclient_dropwizard-0.3.0.jar simpleclient_pushgateway/0.3.0/io.prometheus_simpleclient_pushgateway-0.3.0.jar"; do sudo curl -s -L -O "https://raw.github.com/banzaicloud/spark-metrics/master/maven-repo/releases?filepath=io/prometheus/${file}"; done
   - cd ${HOME}/spark
   - docker run --name spark -d -v ${HOME}/.m2:/root/.m2 -v ${HOME}/spark:/opt/spark maven:3.5.3-jdk-8-slim /bin/bash -c "cd /opt/spark && ./build/mvn -Pkubernetes -Phadoop-2.7  -DskipTests clean package"
   - sleep 15; while [ $(docker inspect spark --format='{{.State.Status}}') == "running" ]; do docker logs --tail 10 spark; sleep 30; done
